@@ -1,21 +1,50 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const { connect, connection } = require('mongoose');
+const bodyParser = require("body-parser")
 
 const app = express();
-const PORT = process.env.PORT || 3000; 
+const PORT = process.env.PORT || 3000;
+app.use(bodyParser.json());
 
-mongoose.connect('your-mongodb-connection-string', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-  
-  const db = mongoose.connection;
-  db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-  db.once('open', () => {
-    console.log('Connected to the database');
-  });
+const connectionString =
+  process.env.MONGODB_URI || 'mongodb+srv://joshbeach2007:password123!@cluster0.udbgiya.mongodb.net/';
 
+// Connect to the database
+connect(connectionString, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
+// Event listeners for connection status
+connection.on('connected', () => {
+  console.log('Connected to MongoDB');
+});
+
+connection.on('error', (err) => {
+  console.error(`MongoDB connection error: ${err}`);
+});
+
+connection.on('disconnected', () => {
+  console.log('Disconnected from MongoDB');
+});
+
+// Close MongoDB connection when the Node.js process is terminated
+process.on('SIGINT', async () => {
+  await connection.close();
+  process.exit(0);
+});
+
+const test = require("./routes/user-routes")
+const test2 = require("./routes/thought-routes")
+const test3 = require("./routes/friend-routes")
+app.use("/test", test)
+app.use("/test2", test2)
+app.use("/test3", test3)
+
+// Export the app
+module.exports = app;
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
