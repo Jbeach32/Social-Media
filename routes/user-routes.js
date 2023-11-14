@@ -20,18 +20,18 @@ router.get('/api/users', async (req, res) => {
 });
 
 // Get a single user by ID and populate thoughts and friends data
-// router.get('/api/users/:userId', async (req, res) => {
-//   try {
-//     const user = await User.findById(req.params.userId);
-//     if (!user) {
-//       return res.status(404).json({ message: 'User not found' });
-//     }
-//     res.json(user);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: 'Internal server error' });
-//   }
-// });
+router.get('/api/users/:userId', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 // Create a new user
 router.post('/api/users', async (req, res) => {

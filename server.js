@@ -37,9 +37,11 @@ process.on('SIGINT', async () => {
 const test = require("./routes/user-routes")
 const test2 = require("./routes/thought-routes")
 const test3 = require("./routes/friend-routes")
+const test4 = require("./routes/reaction-routes")
 app.use("/test", test)
 app.use("/test2", test2)
 app.use("/test3", test3)
+app.use("/test4", test4)
 
 // Export the app
 module.exports = app;
